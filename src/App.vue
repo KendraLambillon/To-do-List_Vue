@@ -1,11 +1,17 @@
 <script setup>
-  import { ref, watch, onMounted } from 'vue'
+  import { ref, watch, onMounted, computed } from 'vue'
 
   const todos = ref([])
   const name = ref('')
 
+
   const input_content = ref('')
   const input_category = ref(null)
+
+  // el input mas reciente se ponga el principio de la lista
+  const todos_asc = computed(() => todos.value.sort((a,b) => {
+    return b.createdAt - a.createdAt
+  }))
 
   const addTodo = () => {
     if(input_content.value.trim() === '' || input_category.value === null) return
@@ -17,11 +23,16 @@
       content: input_content.value,
       category: input_category.value,
       done: false,
-      createdAt: new Date().getDate()
+      createdAt: new Date().getTime()
     })
   //leave the input clean
     input_content.value = ''
     input_category.value = null
+  }
+// hacer un filtro y comprar que el todo es diferente a los que estan almacenados.
+// si es diferente, se añade a la lsita y si es igual, desaparece.
+  const removeTodo = (todo) => {
+    todos.value = todos.value.filter(t => t !== todo)
   }
 
   watch(todos, (newVal)=>{
@@ -68,12 +79,13 @@
         <input type="submit" value="Add to do">
       </form>
 
-      {{ todos }}
+
     </section>
     <section class="todo-list">
       <h3>TODO LIST</h3>
       <div class="list">
-        <div v-for="todo in todos" :class="`todo-item ${todo.done && 'done'}`">
+        <div v-for="todo in todos_asc" :class="`todo-item ${todo.done && 'done'}`">
+
           <label>
             <input type="checkbox" v-model="todo.done">
             <span :class="`bubble ${todo.category}`"></span>
@@ -81,6 +93,10 @@
 
           <div class="todo-content">
             <input type="text" v-model="todo.content">
+          </div>
+
+          <div class="actions">
+            <button class="delete" @click="removeTodo(todo)">Delete</button>
           </div>
         </div>
       </div>

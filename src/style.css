@@ -172,7 +172,7 @@ input:checked ~ .bubble::after {
 
 .todo-list .list {
 	margin: 1rem 0;
-} 
+}
 
 .todo-list .todo-item {
 	display: flex;
@@ -227,7 +227,7 @@ input:checked ~ .bubble::after {
 	background-color: var(--danger);
 }
 
-.todo-item.done .todo-content input {
+.todo-item .done .todo-content input {
 	text-decoration: line-through;
 	color: var(--grey);
 }
