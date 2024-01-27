@@ -8,8 +8,25 @@
   const input_category = ref(null)
 
   const addTodo = () => {
+    if(input_content.value.trim() === '' || input_category.value === null) return
 
+    //Push, manda las propiedades internas
+    //por eso watch no puede acceder a las propiedades internas
+    //por eso hacemos uso de DEEP
+    todos.value.push({
+      content: input_content.value,
+      category: input_category.value,
+      done: false,
+      createdAt: new Date().getDate()
+    })
+  //leave the input clean
+    input_content.value = ''
+    input_category.value = null
   }
+
+  watch(todos, (newVal)=>{
+    localStorage.setItem('todos', JSON.stringify(newVal))
+  }, {deep: true}) // Deep, permite a watch de mirar en uno de los objetos que hemos creado y mirar cada una de las propiedades
 
   watch(name, (newVal) => {
     localStorage.setItem('name', newVal)
